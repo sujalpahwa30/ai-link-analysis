@@ -1,0 +1,296 @@
+{
+  "success": true,
+  "website": "https://www.shopify.com/",
+  "brand": {
+    "name": "Shopify",
+    "category": "E-commerce & Retail",
+    "summary": "Try Shopify free. Build or grow your business fast with AI. Get more than ecommerce software with tools to manage every part of your business."
+  },
+  "analysis": {
+    "competitor_analysis": {
+      "brand_overview": "Try Shopify free. Build or grow your business fast with AI. Get more than ecommerce software with tools to manage every part of your business.",
+      "main_category": "E-commerce & Retail",
+      "products_services": [
+        "Shop App",
+        "Finances & Funding",
+        "Universal Commerce Protocol",
+        "E-commerce Store Development",
+        "Product Merchandising"
+      ],
+      "competitors": [],
+      "competitive_advantages": [
+        "Combined storefront, merchandising, and retention focus.",
+        "Understanding of both customer experience and back-office operations."
+      ],
+      "opportunities": [
+        "Add product-category landing pages.",
+        "Publish sizing, delivery, and returns FAQs.",
+        "Build seasonal campaign landing pages."
+      ],
+      "comparison_summary": "Competitor rows are intentionally omitted in demo mode. Configure an LLM API key for AI-suggested competitor mapping."
+    },
+    "target_search_queries": [
+      {
+        "query": "best ecommerce solutions company",
+        "platforms": [
+          "Google",
+          "LinkedIn"
+        ],
+        "intent": "Commercial investigation",
+        "business_relevance": "High-intent buyers comparing specialist providers.",
+        "target_audience": "Store owners expanding online"
+      },
+      {
+        "query": "shop app services",
+        "platforms": [
+          "Google",
+          "Facebook"
+        ],
+        "intent": "Service discovery",
+        "business_relevance": "Direct match for a core offering from Shopify.",
+        "target_audience": "Direct-to-consumer brands"
+      },
+      {
+        "query": "ecommerce solutions for startups",
+        "platforms": [
+          "LinkedIn",
+          "X (Twitter)"
+        ],
+        "intent": "Business discovery",
+        "business_relevance": "Targets early-stage buyers with budget and urgency.",
+        "target_audience": "Startup founders and small leadership teams"
+      },
+      {
+        "query": "finances & funding ideas",
+        "platforms": [
+          "Instagram",
+          "Facebook"
+        ],
+        "intent": "Inspiration and research",
+        "business_relevance": "Supports upper-funnel discovery through visual examples and education.",
+        "target_audience": "Owners and managers researching options"
+      },
+      {
+        "query": "affordable ecommerce solutions",
+        "platforms": [
+          "Google",
+          "X (Twitter)"
+        ],
+        "intent": "Price-sensitive service search",
+        "business_relevance": "Captures buyers who are actively evaluating cost and fit.",
+        "target_audience": "Direct-to-consumer brands"
+      }
+    ],
+    "seo_improvements": {
+      "primary_keyword": "ecommerce solutions",
+      "secondary_keywords": [
+        "Shop App",
+        "Finances & Funding",
+        "Universal Commerce Protocol",
+        "E-commerce Store Development",
+        "E-commerce & Retail"
+      ],
+      "long_tail_keywords": [
+        "how to choose ecommerce solutions",
+        "shop app for small businesses",
+        "best ecommerce solutions for startups"
+      ],
+      "business_keywords": [
+        "e-commerce & retail company",
+        "professional ecommerce solutions",
+        "custom ecommerce solutions"
+      ],
+      "recommended_title": "Shopify | Ecommerce Solutions",
+      "title_rationale": "Combines the brand with the category keyword and stays within a concise title length.",
+      "meta_description": "Try Shopify free. Build or grow your business fast with AI. Get more than ecommerce software with tools to manage every part of your business.",
+      "meta_description_rationale": "Uses the site's own description, the primary keyword, and a clear next step.",
+      "supporting_content": [
+        {
+          "title": "Shop App service page",
+          "content_type": "service_landing_page",
+          "why_it_helps": "Creates a focused page for buyers searching for shop app."
+        },
+        {
+          "title": "Finances & Funding service page",
+          "content_type": "service_landing_page",
+          "why_it_helps": "Creates a focused page for buyers searching for finances & funding."
+        },
+        {
+          "title": "Frequently asked questions about ecommerce solutions",
+          "content_type": "faq",
+          "why_it_helps": "Captures question-based searches and reduces pre-sales friction."
+        },
+        {
+          "title": "Retail case study",
+          "content_type": "case_study",
+          "why_it_helps": "Provides credible proof and supports commercial-intent queries."
+        }
+      ]
+    },
+    "top_services": [
+      {
+        "service_name": "Shop App",
+        "description": "Shop App appears as a service or offering on the website. The page positions it within its e-commerce & retail proposition.",
+        "target_industry": "Retail",
+        "target_customer": "Store owners expanding online",
+        "main_benefit": "Helps customers address higher conversion rates.",
+        "source": "website",
+        "evidence": "Website heading or navigation label: Shop App"
+      },
+      {
+        "service_name": "Finances & Funding",
+        "description": "Finances & Funding appears as a service or offering on the website. The page positions it within its e-commerce & retail proposition.",
+        "target_industry": "Retail",
+        "target_customer": "Store owners expanding online",
+        "main_benefit": "Helps customers address higher conversion rates.",
+        "source": "website",
+        "evidence": "Website heading or navigation label: Finances & Funding"
+      },
+      {
+        "service_name": "Universal Commerce Protocol",
+        "description": "Universal Commerce Protocol appears as a service or offering on the website. The page positions it within its e-commerce & retail proposition.",
+        "target_industry": "Retail",
+        "target_customer": "Store owners expanding online",
+        "main_benefit": "Helps customers address higher conversion rates.",
+        "source": "website",
+        "evidence": "Website heading or navigation label: Universal Commerce Protocol"
+      },
+      {
+        "service_name": "E-commerce Store Development",
+        "description": "E-commerce Store Development is a category-based recommendation inferred from the site's focus on e-commerce & retail; it is not explicitly confirmed on the page.",
+        "target_industry": "Retail",
+        "target_customer": "Store owners expanding online",
+        "main_benefit": "Could help the business address demand for higher conversion rates.",
+        "source": "inferred",
+        "evidence": ""
+      },
+      {
+        "service_name": "Product Merchandising",
+        "description": "Product Merchandising is a category-based recommendation inferred from the site's focus on e-commerce & retail; it is not explicitly confirmed on the page.",
+        "target_industry": "Retail",
+        "target_customer": "Store owners expanding online",
+        "main_benefit": "Could help the business address demand for higher conversion rates.",
+        "source": "inferred",
+        "evidence": ""
+      }
+    ],
+    "target_audience": {
+      "primary_audience": [
+        {
+          "segment": "Growing retail businesses",
+          "description": "Small and mid-sized organisations that need ecommerce solutions.",
+          "business_type": "Small and medium businesses",
+          "needs": [
+            "Higher conversion rates",
+            "Efficient order operations"
+          ],
+          "marketing_angle": "Lead with practical outcomes, proof, and a low-friction consultation."
+        },
+        {
+          "segment": "Specialist teams and department leads",
+          "description": "Teams evaluating a specialist partner for ecommerce solutions.",
+          "business_type": "Independent retailers",
+          "needs": [
+            "Efficient order operations",
+            "Stronger customer loyalty"
+          ],
+          "marketing_angle": "Use detailed service pages, FAQs, and evidence of delivery capability."
+        }
+      ],
+      "secondary_audience": [
+        {
+          "segment": "Startups and new ventures",
+          "description": "Early-stage teams that need a credible partner without building everything in-house.",
+          "business_type": "Startups",
+          "needs": [
+            "Fast mobilisation",
+            "Clear scope and pricing"
+          ],
+          "marketing_angle": "Offer a defined starter engagement and transparent next steps."
+        },
+        {
+          "segment": "Established and multi-location organisations",
+          "description": "Larger organisations comparing providers for consistency and specialist capacity.",
+          "business_type": "Enterprise and multi-site organisations",
+          "needs": [
+            "Reliable delivery",
+            "Documented processes"
+          ],
+          "marketing_angle": "Emphasise governance, integration, and account support."
+        }
+      ],
+      "industries": [
+        "Retail",
+        "Consumer goods",
+        "Fashion",
+        "Food and beverage",
+        "Wholesale"
+      ],
+      "business_types": [
+        "Direct-to-consumer brands",
+        "Independent retailers",
+        "Wholesale distributors"
+      ],
+      "customer_profiles": [
+        "Store owners expanding online",
+        "Brand managers improving repeat purchase",
+        "Operations leads scaling fulfilment"
+      ],
+      "location_focus": "",
+      "customer_needs": [
+        "Higher conversion rates",
+        "Efficient order operations",
+        "Stronger customer loyalty"
+      ],
+      "customer_interests": [
+        "Conversion optimisation",
+        "Product photography",
+        "Fulfilment automation",
+        "Loyalty programmes"
+      ],
+      "recommended_segments": [
+        "Independent retailers moving online",
+        "DTC brands preparing seasonal campaigns",
+        "Wholesalers adding a digital catalogue"
+      ]
+    },
+    "data_quality_notes": [
+      "Demo mode uses deterministic heuristics rather than an LLM.",
+      "Services marked 'inferred' are category-based suggestions, not confirmed page content.",
+      "Competitor analysis is intentionally empty to avoid fabricating market data.",
+      "No competitor set was returned. Treat competitor positioning as unverified."
+    ]
+  },
+  "meta": {
+    "request_id": "demo-request-0001",
+    "analyzed_at": "2026-11-18T14:54:01.196369Z",
+    "duration_ms": 392,
+    "cached": false,
+    "llm": {
+      "provider": "demo",
+      "model": "deterministic-heuristic-v1",
+      "mode": "demo",
+      "fallback_used": false,
+      "usage": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost_usd": 0.0
+      }
+    },
+    "extraction": {
+      "requested_url": "https://www.shopify.com/",
+      "final_url": "https://www.shopify.com/",
+      "title": "Shopify: The All-in-One Commerce Platform for Businesses - Shopify",
+      "content_chars": 3182,
+      "word_count": 510,
+      "truncated": false,
+      "fetched_at": "2026-11-18T14:54:01.192453Z",
+      "content_hash": "adf68ab2a0874497e409a3463125f5dcfcb01a1e32e23410a5b11f96301a00a9"
+    },
+    "warnings": [
+      "Demo mode is active. Set GEMINI_API_KEY or OPENAI_API_KEY for grounded LLM analysis and competitor suggestions.",
+      "No competitor set was returned. Treat competitor positioning as unverified."
+    ]
+  }
+}

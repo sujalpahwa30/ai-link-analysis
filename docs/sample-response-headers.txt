@@ -1,0 +1,10 @@
+HTTP/1.1 200 OK
+date: Wed, 18 Nov 2026 14:53:59 GMT
+server: uvicorn
+content-length: 9226
+content-type: application/json
+x-request-id: demo-request-0001
+x-content-type-options: nosniff
+x-frame-options: DENY
+referrer-policy: no-referrer
+

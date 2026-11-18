@@ -1,0 +1,59 @@
+Captured demo-mode run
+======================
+
+Environment : Windows 11, Python 3.12, .venv, LLM_PROVIDER=auto with no provider key
+Server      : .\.venv\Scripts\python -m uvicorn app.main:app --host 127.0.0.1 --port 4000
+Date        : 2026-11-18 (UTC)
+Request ID  : demo-request-0001
+
+Command
+-------
+
+curl -X POST http://127.0.0.1:4000/link-analysis \
+  -H "Content-Type: application/json" \
+  -H "X-Request-ID: demo-request-0001" \
+  --data-binary @docs/sample-request.json
+
+Response headers
+----------------
+
+HTTP/1.1 200 OK
+date: Wed, 18 Nov 2026 14:53:59 GMT
+server: uvicorn
+content-length: 9226
+content-type: application/json
+x-request-id: demo-request-0001
+x-content-type-options: nosniff
+x-frame-options: DENY
+referrer-policy: no-referrer
+
+Measured result
+---------------
+
+HTTP status         : 200
+Wall-clock time     : 0.525 s (curl time_total)
+Server-side time    : 392 ms (meta.duration_ms)
+Response body       : 9,226 bytes
+Cache               : miss (meta.cached = false)
+Extracted page      : 3,182 characters, 510 words, not truncated
+LLM provider        : demo (deterministic-heuristic-v1), estimated cost $0.00
+
+Five returned search queries
+----------------------------
+
+1. best ecommerce solutions company
+2. shop app services
+3. ecommerce solutions for startups
+4. finances & funding ideas
+5. affordable ecommerce solutions
+
+Five returned services
+----------------------
+
+1. Shop App                        (source: website)
+2. Finances & Funding              (source: website)
+3. Universal Commerce Protocol     (source: website)
+4. E-commerce Store Development    (source: inferred)
+5. Product Merchandising           (source: inferred)
+
+The full response body is saved as docs/sample-response.json.

@@ -1,9 +1,19 @@
 name: CI
 
+# Runs on demand from the Actions tab.
+#
+# Push/PR triggers are intentionally commented out: GitHub currently refuses to
+# start any job on this account ("The job was not started because your account
+# is locked due to a billing issue"), which painted every commit with a red X
+# even though no step ran. Once billing is resolved, restore the block below.
+#
+# on:
+#   push:
+#     branches: [main]
+#   pull_request:
+
 on:
-  push:
-    branches: [main]
-  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read

@@ -486,7 +486,7 @@ pytest
 ruff check app tests
 ```
 
-The same two commands run in GitHub Actions on every push (`.github/workflows/ci.yml`).
+The same two commands are defined in `.github/workflows/ci.yml`. The workflow is currently set to manual dispatch rather than running on push, because GitHub Actions is blocked on this account at the billing level; restore the `push`/`pull_request` triggers in that file once Actions is available.
 
 Current result:
 

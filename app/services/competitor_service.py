@@ -14,6 +14,8 @@ from app.schemas import Competitor
 _PLACEHOLDER_NAMES = {
     "example",
     "dummy",
+    "localhost",
+    "placeholder",
     "n/a",
     "none",
     "unknown",
@@ -23,7 +25,16 @@ _PLACEHOLDER_NAMES = {
     "competitor",
     "competitor name",
 }
-_PLACEHOLDER_PREFIXES = ("example.", "example ", "dummy", "your company", "your brand", "insert ")
+_PLACEHOLDER_PREFIXES = (
+    "example.",
+    "example ",
+    "dummy",
+    "localhost",
+    "placeholder",
+    "your company",
+    "your brand",
+    "insert ",
+)
 _PLACEHOLDER_SUFFIXES = (
     ".example",
     ".example.com",

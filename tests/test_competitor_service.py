@@ -63,6 +63,8 @@ def test_placeholder_competitors_are_removed() -> None:
             _competitor("example.org"),
             _competitor("example.net"),
             _competitor("dummyurl.com"),
+            _competitor("Localhost"),
+            _competitor("Placeholder.com"),
             _competitor("Northstar"),
         ],
     )

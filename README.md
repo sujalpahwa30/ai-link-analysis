@@ -20,6 +20,7 @@ A production-shaped FastAPI service that fetches a public website, extracts read
 - Post-processes competitor rows to remove duplicates, the brand itself, and malformed URLs.
 - Returns a stable JSON contract with request timing, token usage, and estimated cost.
 - Caches identical analyses in-process with TTL + LRU eviction.
+- Enforces a per-client rate limit on the analysis endpoint (`429` + `Retry-After`).
 - Ships with tests, Docker, a Render blueprint, and this model/cost analysis.
 
 ### Response sections
@@ -168,7 +169,7 @@ With both keys present, Gemini is primary and GPT-6 Luna is the fallback. Disabl
 | `ENABLE_LLM_FALLBACK` | `true` | Cross-provider fallback on provider failure. |
 | `GEMINI_API_KEY` | — | Google AI Studio key. |
 | `GEMINI_MODEL` | `gemini-3.5-flash-lite` | Primary model. |
-| `OPENAI_API_KEY` | — | OpenAI key. |
+| `OPENAI_API_KEY` | — | OpenAI-compatible key (Groq, OpenRouter, or OpenAI). |
 | `OPENAI_MODEL` | `gpt-6-luna` | Fallback / cost-first model. |
 | `OPENAI_BASE_URL` | `https://api.openai.com/v1` | OpenAI-compatible endpoint. |
 | `OPENAI_REASONING_EFFORT` | `none` | Lower latency/cost for extraction-style work. |
@@ -178,6 +179,9 @@ With both keys present, Gemini is primary and GPT-6 Luna is the fallback. Disabl
 | `FETCH_TIMEOUT_SECONDS` | `20` | Website fetch timeout. |
 | `LLM_TIMEOUT_SECONDS` | `60` | Provider timeout. |
 | `LLM_MAX_OUTPUT_TOKENS` | `5000` | Output cap. |
+| `RATE_LIMIT_ENABLED` | `true` | Per-client limit on `POST /link-analysis`. |
+| `RATE_LIMIT_REQUESTS` | `10` | Allowed analysis calls per client per window. |
+| `RATE_LIMIT_WINDOW_SECONDS` | `60` | Rate-limit window length. |
 | `CACHE_TTL_SECONDS` | `3600` | Analysis cache TTL. |
 | `CACHE_MAX_ENTRIES` | `256` | In-process LRU bound. |
 | `CORS_ORIGINS` | empty | Comma-separated allowed origins. |
@@ -256,20 +260,20 @@ curl -X POST http://localhost:4000/link-analysis \
     "data_quality_notes": []
   },
   "meta": {
-    "request_id": "demo-request-0001",
-    "analyzed_at": "2026-11-18T14:54:01Z",
-    "duration_ms": 392,
+    "request_id": "3244ff232825480b87f097640ae45f7a",
+    "analyzed_at": "2026-11-19T13:54:31Z",
+    "duration_ms": 23850,
     "cached": false,
     "llm": {
-      "provider": "demo",
-      "model": "deterministic-heuristic-v1",
-      "mode": "demo",
-      "fallback_used": false,
+      "provider": "openai",
+      "model": "openai/gpt-oss-120b",
+      "mode": "llm",
+      "fallback_used": true,
       "usage": {
-        "input_tokens": 0,
-        "output_tokens": 0,
-        "total_tokens": 0,
-        "estimated_cost_usd": 0.0
+        "input_tokens": 4163,
+        "output_tokens": 2601,
+        "total_tokens": 6764,
+        "estimated_cost_usd": null
       }
     },
     "extraction": {
@@ -282,12 +286,14 @@ curl -X POST http://localhost:4000/link-analysis \
       "fetched_at": "2026-11-18T14:54:01Z",
       "content_hash": "..."
     },
-    "warnings": []
+    "warnings": [
+      "Primary LLM provider failed; analysis was completed with the fallback provider."
+    ]
   }
 }
 ```
 
-A real captured demo-mode response is in [`docs/sample-response.json`](docs/sample-response.json), with the exact request in [`docs/sample-request.json`](docs/sample-request.json), response headers in [`docs/sample-response-headers.txt`](docs/sample-response-headers.txt), and a timing log in [`docs/sample-run.txt`](docs/sample-run.txt). The snippet above is abbreviated; the actual response contains five search queries and five services.
+A real captured response is in [`docs/sample-response.json`](docs/sample-response.json), with the exact request in [`docs/sample-request.json`](docs/sample-request.json), response headers in [`docs/sample-response-headers.txt`](docs/sample-response-headers.txt), and a timing log in [`docs/sample-run.txt`](docs/sample-run.txt). That capture came from a Gemini free-tier `503` window and was completed by the Groq fallback, which is why `fallback_used` is `true`; the five-section contract is unchanged. The snippet above is abbreviated; the actual response contains five search queries and five services.
 
 ### Error shape
 
@@ -344,6 +350,7 @@ A real captured demo-mode response is in [`docs/sample-response.json`](docs/samp
 
 - Secrets via environment variables and `SecretStr`.
 - No API keys, prompts, or page text in logs.
+- Per-client rate limiting on `POST /link-analysis` (`RATE_LIMIT_REQUESTS` per `RATE_LIMIT_WINDOW_SECONDS`, default 10 per minute) returns `429` with `Retry-After`. `/health` and `/docs` stay reachable so health checks and reviewers are never locked out.
 - Generic 500 responses to clients; stack traces only in server logs.
 - Security headers on every response.
 - Request IDs for traceability.
@@ -352,8 +359,8 @@ A real captured demo-mode response is in [`docs/sample-response.json`](docs/samp
 
 ### Not included (intentional for a timed exercise)
 
-- API authentication and per-client quotas.
-- Distributed rate limiting.
+- API authentication and per-tenant quotas (a per-client rate limit is included).
+- Distributed rate limiting (counters are in-process).
 - Redis cache.
 - Playwright/browser rendering.
 - Persistent storage or analytics database.
@@ -364,7 +371,7 @@ A real captured demo-mode response is in [`docs/sample-response.json`](docs/samp
 
 ### Method and honesty statement
 
-Pricing and model capabilities below were checked against official provider documentation on **18 November 2026**. Third-party speed figures are explicitly labelled as third-party measurements, not measurements from this repository. **No task-specific accuracy benchmark was run because no provider API key was available in the build environment.** The recommendation is therefore a documented engineering trade-off, not a claim of measured maximum accuracy.
+Pricing and model capabilities below were checked against official provider documentation on **18 November 2026**. Third-party speed figures are explicitly labelled as third-party measurements, not measurements from this repository. The service was then exercised end-to-end against real free-tier provider APIs on **19 November 2026**; those runs are reported in section E. They are functional smoke tests, not an accuracy benchmark: there is no labelled evaluation set, so the recommendation remains a documented engineering trade-off rather than a claim of measured maximum accuracy.
 
 Official sources:
 
@@ -380,7 +387,8 @@ Official sources:
 | Provider | Model | Input / 1M | Output / 1M | Context | Structured JSON | Speed evidence | Role here |
 |---|---|---:|---:|---:|---|---|---|
 | Google | `gemini-3.5-flash-lite` | $0.30 | $2.50 | 1,048,576 | Native structured outputs / JSON mode | ~350 output tok/s (Google-cited Artificial Analysis); third-party, not measured here | **Primary** |
-| OpenAI | `gpt-6-luna` | $0.10 | $0.50 | 1,050,000 | Strict JSON Schema structured outputs | ~126–142 output tok/s in third-party OpenRouter/Artificial Analysis reports; not measured here | **Fallback / cost-first** |
+| OpenAI | `gpt-6-luna` | $0.10 | $0.50 | 1,050,000 | Strict JSON Schema structured outputs | ~126–142 output tok/s in third-party OpenRouter/Artificial Analysis reports; not measured here | Optional paid fallback / cost-first |
+| Groq | `openai/gpt-oss-120b` | free tier | — | 131,072 | Strict JSON Schema structured outputs | **Measured here:** 23.9–24.9 s end-to-end including a failed Gemini attempt | **Wired fallback** |
 | Anthropic | `claude-haiku-5-5` | $0.10* | $0.50* | 1,000,000 | Structured outputs | Anthropic describes it as its fastest, latency-sensitive tier; no directly comparable task benchmark here | Evaluated, not wired |
 | OpenAI | `gpt-5.4-nano` | $0.20 | $1.25 | Smaller/older tier | Structured outputs | Not benchmarked here | Optional legacy alternative |
 | Anthropic | `claude-sonnet-5-5` | $2.00 | $10.00 | 1,000,000 | Structured outputs | Fast model class, but 20× Haiku input price | Higher-accuracy option if cost is secondary |
@@ -412,9 +420,9 @@ The API reports actual provider token counts and an estimated cost in `meta.llm.
 | Estimated input | 4,000–6,000 tokens after cleaning/truncation |
 | Estimated output | 2,000–3,000 tokens of JSON |
 | Estimated cost | $0.006–$0.012 per analysis |
-| Expected latency | ~1–3 s fetch + ~8–15 s model generation (estimate; not measured without a key) |
+| Measured latency | 17.3 s on Gemini, 23.9–24.9 s when the fallback runs (one page fetch + one LLM call) |
 | Why | Strong JSON support, 1M context, low-latency Flash-Lite class, and a sub-cent cost per request. It is about 2.5–3× faster than GPT-6 Luna in third-party throughput reports while still costing under one cent. |
-| Fallback | OpenAI `gpt-6-luna` |
+| Fallback | Groq `openai/gpt-oss-120b` through the OpenAI-compatible slot (free tier, strict JSON Schema) |
 | Cost-first alternative | Set `LLM_PROVIDER=openai`; GPT-6 Luna is ~4.4× cheaper on the assumptions above but slower. |
 | Accuracy policy | Do not claim “maximum accuracy” without a labelled evaluation set. Use the included response contract, spot-check outputs, and compare models on 50–100 real sites before making a production accuracy claim. |
 
@@ -426,8 +434,8 @@ The API reports actual provider token counts and an estimated cost in `meta.llm.
 
 1. **One call** produces all five sections instead of five API calls.
 2. **Content cleaning** removes scripts, styles, navigation, footers, duplicate lines, and boilerplate.
-3. **Hard character budget** (`MAX_CONTENT_CHARS=18000`) keeps inputs predictable.
-4. **Output cap** (`LLM_MAX_OUTPUT_TOKENS=5000`) prevents runaway generations.
+3. **Hard character budget** (`MAX_CONTENT_CHARS`, default `18000`, shipped `.env` uses `8000` to fit Groq's free-tier token budget) keeps inputs predictable.
+4. **Output cap** (`LLM_MAX_OUTPUT_TOKENS`, default `5000`, shipped `.env` uses `3000` for the same reason) prevents runaway generations.
 5. **TTL + LRU cache** serves repeated URLs without another fetch or LLM call.
 6. **Single repair attempt** only when validation fails; no retry loop.
 7. **Provider fallback** only after primary failure, not on every request.
@@ -435,7 +443,26 @@ The API reports actual provider token counts and an estimated cost in `meta.llm.
 9. **Token and cost telemetry** are returned in every response.
 10. **Low reasoning effort** is configured for GPT-6 Luna, appropriate for structured extraction.
 
-### E. Next cost/quality improvements
+### E. Measured runs (19 November 2026)
+
+Captured with free-tier credentials against the running service, not estimated.
+
+| Site | Provider used | Wall clock | Input / output tokens | Competitors | Queries | Services | Notes |
+|---|---|---:|---:|---:|---:|---:|---|
+| `stripe.com/in` | Gemini 3.5 Flash-Lite | 17.3 s | 6,002 / 2,958 | 3 | 5 | 5 | Primary path; all five service evidence quotes verified against the page HTML |
+| `stripe.com/in` | Groq `gpt-oss-120b` (fallback) | 24.9 s | 6,567 / 2,785 | 4 | 5 | 5 | Gemini returned `503`; fallback returned the full contract |
+| `shopify.com` | Groq `gpt-oss-120b` (fallback) | 23.9 s | 4,163 / 2,601 | 4 | 5 | 5 | Same Gemini `503` window; captured in `docs/` |
+| `example.com` | Gemini 3.5 Flash-Lite | 17.3 s | 1,687 / 2,486 | 3 | 5 | 5 | 156 chars of page text; warnings correctly flag low confidence |
+
+Free-tier limits observed directly:
+
+- **Gemini** returns `503 UNAVAILABLE` ("currently experiencing high demand") for large requests during peak demand. The same prompt succeeds on other attempts and always succeeds at smaller output caps.
+- **Groq** returns `429` with `Limit 8000 TPM` when a repair attempt follows a full-size request. One full analysis fits; a second call in the same minute may not.
+- Neither limit caused a `5xx` from this API: the fallback absorbed the Gemini failure and the contract still returned five queries and five services.
+
+A defect found by these runs: the strict JSON-Schema converter used to strip any key named `title`, which removed the real `supporting_content[].title` field from the schema sent to OpenAI-compatible providers. Groq therefore omitted it and validation failed twice. This is fixed in `app/services/json_schema.py` with regression tests.
+
+### F. Next cost/quality improvements
 
 - Add Redis so cache hits work across multiple Uvicorn workers/replicas.
 - Cache by `content_hash` and reuse unchanged extraction results.
@@ -457,7 +484,7 @@ ruff check app tests
 Current result:
 
 ```text
-39 passed
+42 passed
 All checks passed!
 ```
 
@@ -471,6 +498,7 @@ Coverage includes:
 - LLM JSON repair and provider fallback.
 - Competitor deduplication and malformed URL handling.
 - End-to-end API contract, caching, request IDs, health, and structured errors.
+- Rate limiting: `429` shape, `Retry-After`, and exemption of `/health`.
 
 The test suite uses `httpx.MockTransport` and fake providers. It does not make paid LLM calls or depend on a live website.
 
@@ -493,7 +521,18 @@ docker compose up --build
 
 ### Render
 
-`render.yaml` provisions a Docker web service with `/health` as the health check. Set `GEMINI_API_KEY` (and optionally `OPENAI_API_KEY`) as secret environment variables in the Render dashboard.
+`render.yaml` provisions a Docker web service with `/health` as the health check.
+
+1. Push the repository to GitHub.
+2. In Render, choose **New → Blueprint** and select the repository.
+3. Enter `GEMINI_API_KEY` and `OPENAI_API_KEY` when prompted. Both use `sync: false`, so they are never stored in `render.yaml`.
+4. Deploy, then confirm `https://<service>.onrender.com/health` returns `status: "ok"` and `demo_mode: false`.
+
+Operational notes:
+
+- The image listens on the injected `$PORT`, so the same container also runs on Cloud Run, Fly.io, and plain Docker.
+- The free plan sleeps after roughly 15 minutes of inactivity and the first request can take ~50 s. Ping `/health` from a free uptime monitor before sharing the link.
+- Keep `RATE_LIMIT_REQUESTS` conservative when the deployment uses free-tier keys.
 
 ### Live demo fields for submission
 
@@ -503,14 +542,14 @@ docker compose up --build
 | API Endpoint | `https://YOUR-DEPLOYMENT.example/link-analysis` |
 | API Documentation | `https://YOUR-DEPLOYMENT.example/docs` |
 
-Deployment cannot be completed from this repository alone because it requires a hosting account and provider credentials. The container and Render blueprint are ready; replace the placeholders above after deploying.
+Deployment requires a hosting account and provider credentials. The container and blueprint are ready; replace the placeholders above after deploying.
 
 ### Production checklist
 
 - Use a paid provider key and set a billing alert.
 - Put the service behind an authenticated API gateway or add API-key auth.
 - Add Redis for shared caching.
-- Add rate limiting (per IP/client) and request quotas.
+- Tune `RATE_LIMIT_REQUESTS` for expected traffic; add per-tenant quotas if third parties share the deployment.
 - Restrict egress to the public internet and block cloud metadata ranges at the network layer.
 - Run at least two replicas behind a load balancer.
 - Export structured logs, latency, provider error rate, cache hit rate, and token cost metrics.
@@ -530,7 +569,9 @@ Deployment cannot be completed from this repository alone because it requires a 
 - **DNS rebinding** is mitigated but not fully eliminated without network-level egress controls.
 - **Demo mode** is deterministic and intentionally does not fabricate competitors.
 - **LLM output can still be wrong.** The contract guarantees shape and provenance labels, not factual truth.
-- **No authentication/rate limiting** in the base project; add them before a public production launch.
+- **No authentication.** A per-client rate limit is included, but anyone holding the URL can spend your provider quota; add API keys before a real launch.
+- **Free-tier capacity is not production capacity.** Gemini returns `503` on large requests during demand spikes and Groq enforces an 8,000 TPM ceiling. The fallback covers the former; the latter means one full analysis per minute.
+- **Rate limits are per process.** Multiple replicas each keep their own counters; move them to Redis for a shared limit.
 - **Model names and prices change.** The price table is dated and returns `null` for unknown models rather than guessing.
 
 ---
@@ -552,8 +593,9 @@ Deployment cannot be completed from this repository alone because it requires a 
 
 - [ ] Push this repository to a **public** GitHub repository.
 - [ ] Add a live deployment URL, `/link-analysis`, and `/docs` links above.
-- [ ] Confirm no `.env`, API key, or credential is committed.
-- [ ] Run `pytest` and `ruff check app tests` before submission.
+- [x] Confirm no `.env`, API key, or credential is committed.
+- [x] Run `pytest` and `ruff check app tests` before submission (42 tests).
+- [ ] Rotate any provider key that was shared outside the repository before going live.
 - [ ] Follow Dxora Technologies on LinkedIn: <https://www.linkedin.com/company/dxora-technologies>
 - [ ] Follow CREST on Instagram: <https://www.instagram.com/crestspot/>
 - [ ] Include your LinkedIn and Instagram profile links in the application.

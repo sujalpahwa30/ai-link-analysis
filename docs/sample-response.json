@@ -3,279 +3,307 @@
   "website": "https://www.shopify.com/",
   "brand": {
     "name": "Shopify",
-    "category": "E-commerce & Retail",
-    "summary": "Try Shopify free. Build or grow your business fast with AI. Get more than ecommerce software with tools to manage every part of your business."
+    "category": "E‑commerce platform",
+    "summary": "Shopify provides an all‑in‑one commerce platform that lets merchants build online stores, sell on any channel, manage inventory, payments, fulfillment and leverage AI tools such as Sidekick."
   },
   "analysis": {
     "competitor_analysis": {
-      "brand_overview": "Try Shopify free. Build or grow your business fast with AI. Get more than ecommerce software with tools to manage every part of your business.",
-      "main_category": "E-commerce & Retail",
+      "brand_overview": "Shopify positions itself as a universal commerce platform powered by AI, offering storefront creation, payments, checkout, POS, B2B, international selling and a large app ecosystem.",
+      "main_category": "E‑commerce SaaS",
       "products_services": [
-        "Shop App",
-        "Finances & Funding",
-        "Universal Commerce Protocol",
-        "E-commerce Store Development",
-        "Product Merchandising"
+        "Online store builder",
+        "Payments & checkout",
+        "Point‑of‑sale system",
+        "Shopify Markets (global selling)",
+        "Sidekick AI assistant",
+        "App Store & integrations"
       ],
-      "competitors": [],
+      "competitors": [
+        {
+          "name": "BigCommerce",
+          "website": "https://www.bigcommerce.com",
+          "main_service": "Hosted e‑commerce platform",
+          "target_market": "Mid‑size to enterprise merchants seeking high‑customization",
+          "strengths": [
+            "Robust B2B features",
+            "Strong SEO tools",
+            "Open API architecture"
+          ],
+          "weaknesses": [
+            "Smaller app marketplace than Shopify",
+            "Higher price tiers for advanced features"
+          ],
+          "basis": "public_information"
+        },
+        {
+          "name": "Wix",
+          "website": "https://www.wix.com",
+          "main_service": "Website builder with e‑commerce add‑ons",
+          "target_market": "Small businesses and creators needing quick drag‑and‑drop sites",
+          "strengths": [
+            "Intuitive design editor",
+            "Low entry price",
+            "Broad template library"
+          ],
+          "weaknesses": [
+            "Limited scalability for large catalogs",
+            "Less advanced checkout and B2B tools"
+          ],
+          "basis": "public_information"
+        },
+        {
+          "name": "Squarespace",
+          "website": "https://www.squarespace.com",
+          "main_service": "Design‑focused website and e‑commerce platform",
+          "target_market": "Creative professionals and boutique brands",
+          "strengths": [
+            "High‑quality design templates",
+            "Integrated branding tools",
+            "Simple pricing"
+          ],
+          "weaknesses": [
+            "Fewer payment gateways",
+            "Limited multi‑channel selling"
+          ],
+          "basis": "public_information"
+        },
+        {
+          "name": "WooCommerce",
+          "website": "https://woocommerce.com",
+          "main_service": "WordPress plugin for e‑commerce",
+          "target_market": "Businesses that already run WordPress sites and want full control",
+          "strengths": [
+            "Open‑source flexibility",
+            "Huge ecosystem of extensions",
+            "No platform lock‑in"
+          ],
+          "weaknesses": [
+            "Requires technical expertise",
+            "Hosting and security responsibilities lie with the merchant"
+          ],
+          "basis": "public_information"
+        }
+      ],
       "competitive_advantages": [
-        "Combined storefront, merchandising, and retention focus.",
-        "Understanding of both customer experience and back-office operations."
+        "Largest app ecosystem (21,000+ apps) enabling rapid feature extensions",
+        "Integrated AI assistant (Sidekick) that surfaces growth insights",
+        "Shopify Checkout and Shop Pay delivering higher conversion rates",
+        "Strong global infrastructure (Shopify Markets, multi‑currency, localized shipping)"
       ],
       "opportunities": [
-        "Add product-category landing pages.",
-        "Publish sizing, delivery, and returns FAQs.",
-        "Build seasonal campaign landing pages."
+        "Deeper B2B functionality to capture wholesale markets",
+        "Expansion of AI‑driven personalization beyond Sidekick",
+        "More granular regional pricing and compliance tools for emerging markets"
       ],
-      "comparison_summary": "Competitor rows are intentionally omitted in demo mode. Configure an LLM API key for AI-suggested competitor mapping."
+      "comparison_summary": "Shopify’s breadth of services, AI‑infused tools and high‑converting checkout set it apart from competitors that either focus on design (Wix, Squarespace) or on developer flexibility (WooCommerce). BigCommerce rivals Shopify on enterprise features but lags in app volume. Shopify can strengthen its position by deepening B2B and regional compliance offerings."
     },
     "target_search_queries": [
       {
-        "query": "best ecommerce solutions company",
+        "query": "best ecommerce platform for small business",
         "platforms": [
-          "Google",
-          "LinkedIn"
+          "Google"
         ],
-        "intent": "Commercial investigation",
-        "business_relevance": "High-intent buyers comparing specialist providers.",
-        "target_audience": "Store owners expanding online"
+        "intent": "informational",
+        "business_relevance": "Evaluating SaaS solutions to launch an online store",
+        "target_audience": "Entrepreneurial small‑business owners"
       },
       {
-        "query": "shop app services",
+        "query": "how to set up a Shopify store",
         "platforms": [
-          "Google",
-          "Facebook"
+          "Google"
         ],
-        "intent": "Service discovery",
-        "business_relevance": "Direct match for a core offering from Shopify.",
-        "target_audience": "Direct-to-consumer brands"
+        "intent": "transactional",
+        "business_relevance": "Guides for new merchants ready to start selling",
+        "target_audience": "First‑time online sellers"
       },
       {
-        "query": "ecommerce solutions for startups",
+        "query": "Shopify Sidekick AI demo",
         "platforms": [
-          "LinkedIn",
-          "X (Twitter)"
+          "Google"
         ],
-        "intent": "Business discovery",
-        "business_relevance": "Targets early-stage buyers with budget and urgency.",
-        "target_audience": "Startup founders and small leadership teams"
+        "intent": "informational",
+        "business_relevance": "Assessing AI tools for growth automation",
+        "target_audience": "Growth marketers and ecommerce managers"
       },
       {
-        "query": "finances & funding ideas",
+        "query": "Shopify checkout conversion rates",
         "platforms": [
-          "Instagram",
-          "Facebook"
+          "Google"
         ],
-        "intent": "Inspiration and research",
-        "business_relevance": "Supports upper-funnel discovery through visual examples and education.",
-        "target_audience": "Owners and managers researching options"
+        "intent": "informational",
+        "business_relevance": "Benchmarking checkout performance",
+        "target_audience": "E‑commerce decision makers"
       },
       {
-        "query": "affordable ecommerce solutions",
+        "query": "Shopify POS pricing for retail stores",
         "platforms": [
-          "Google",
-          "X (Twitter)"
+          "Google"
         ],
-        "intent": "Price-sensitive service search",
-        "business_relevance": "Captures buyers who are actively evaluating cost and fit.",
-        "target_audience": "Direct-to-consumer brands"
+        "intent": "transactional",
+        "business_relevance": "Comparing point‑of‑sale costs for brick‑and‑mortar retailers",
+        "target_audience": "Physical‑store owners"
       }
     ],
     "seo_improvements": {
-      "primary_keyword": "ecommerce solutions",
+      "primary_keyword": "ecommerce platform",
       "secondary_keywords": [
-        "Shop App",
-        "Finances & Funding",
-        "Universal Commerce Protocol",
-        "E-commerce Store Development",
-        "E-commerce & Retail"
+        "online store builder",
+        "AI ecommerce tools"
       ],
       "long_tail_keywords": [
-        "how to choose ecommerce solutions",
-        "shop app for small businesses",
-        "best ecommerce solutions for startups"
+        "best ecommerce platform for small business 2026",
+        "Shopify Sidekick AI features"
       ],
       "business_keywords": [
-        "e-commerce & retail company",
-        "professional ecommerce solutions",
-        "custom ecommerce solutions"
+        "checkout conversion",
+        "multichannel selling"
       ],
-      "recommended_title": "Shopify | Ecommerce Solutions",
-      "title_rationale": "Combines the brand with the category keyword and stays within a concise title length.",
-      "meta_description": "Try Shopify free. Build or grow your business fast with AI. Get more than ecommerce software with tools to manage every part of your business.",
-      "meta_description_rationale": "Uses the site's own description, the primary keyword, and a clear next step.",
+      "recommended_title": "Ecommerce Platform – Build & Grow Your Online Store with Shopify",
+      "title_rationale": "Places the primary keyword at the front, stays within 60 characters and conveys the core value proposition.",
+      "meta_description": "Create a high‑converting online store with Shopify's ecommerce platform, AI tools, and unified checkout. Start for free today.",
+      "meta_description_rationale": "Uses the primary keyword, highlights unique benefits, and stays within the 140‑160 character limit.",
       "supporting_content": [
         {
-          "title": "Shop App service page",
-          "content_type": "service_landing_page",
-          "why_it_helps": "Creates a focused page for buyers searching for shop app."
+          "title": "How Sidekick AI Boosts Sales for Online Merchants",
+          "content_type": "blog_post",
+          "why_it_helps": "Demonstrates the tangible ROI of Shopify's AI assistant, attracting growth‑focused marketers."
         },
         {
-          "title": "Finances & Funding service page",
-          "content_type": "service_landing_page",
-          "why_it_helps": "Creates a focused page for buyers searching for finances & funding."
-        },
-        {
-          "title": "Frequently asked questions about ecommerce solutions",
-          "content_type": "faq",
-          "why_it_helps": "Captures question-based searches and reduces pre-sales friction."
-        },
-        {
-          "title": "Retail case study",
+          "title": "Shopify Checkout vs. Competitor Checkouts: Conversion Study",
           "content_type": "case_study",
-          "why_it_helps": "Provides credible proof and supports commercial-intent queries."
+          "why_it_helps": "Provides data‑driven proof of higher conversion rates, supporting the primary keyword and purchase intent."
         }
       ]
     },
     "top_services": [
       {
-        "service_name": "Shop App",
-        "description": "Shop App appears as a service or offering on the website. The page positions it within its e-commerce & retail proposition.",
-        "target_industry": "Retail",
-        "target_customer": "Store owners expanding online",
-        "main_benefit": "Helps customers address higher conversion rates.",
+        "service_name": "Shopify Online Store Builder",
+        "description": "Drag‑and‑drop storefront creation with AI‑generated themes and instant publishing.",
+        "target_industry": "Retail & Consumer Goods",
+        "target_customer": "Entrepreneurs and small‑to‑medium merchants",
+        "main_benefit": "Launch a professional online store in minutes without coding.",
         "source": "website",
-        "evidence": "Website heading or navigation label: Shop App"
+        "evidence": "Build your online store instantly with AI. Or use prebuilt themes."
       },
       {
-        "service_name": "Finances & Funding",
-        "description": "Finances & Funding appears as a service or offering on the website. The page positions it within its e-commerce & retail proposition.",
-        "target_industry": "Retail",
-        "target_customer": "Store owners expanding online",
-        "main_benefit": "Helps customers address higher conversion rates.",
+        "service_name": "Shopify Payments & Checkout",
+        "description": "Integrated payment processing and a high‑converting checkout experience (Shop Pay).",
+        "target_industry": "All ecommerce verticals",
+        "target_customer": "Merchants needing seamless payment flow",
+        "main_benefit": "Higher conversion rates up to 50% vs. guest checkout.",
         "source": "website",
-        "evidence": "Website heading or navigation label: Finances & Funding"
+        "evidence": "The world’s best‑converting checkout… converts up to 50% higher than guest checkout."
       },
       {
-        "service_name": "Universal Commerce Protocol",
-        "description": "Universal Commerce Protocol appears as a service or offering on the website. The page positions it within its e-commerce & retail proposition.",
-        "target_industry": "Retail",
-        "target_customer": "Store owners expanding online",
-        "main_benefit": "Helps customers address higher conversion rates.",
+        "service_name": "Shopify POS",
+        "description": "Point‑of‑sale system that syncs online and offline sales, inventory and customers.",
+        "target_industry": "Physical retail, restaurants, pop‑ups",
+        "target_customer": "Brick‑and‑mortar store owners",
+        "main_benefit": "Run in‑person sales from the same central command center as online store.",
         "source": "website",
-        "evidence": "Website heading or navigation label: Universal Commerce Protocol"
+        "evidence": "Point of Sale -> https://www.shopify.com/pos"
       },
       {
-        "service_name": "E-commerce Store Development",
-        "description": "E-commerce Store Development is a category-based recommendation inferred from the site's focus on e-commerce & retail; it is not explicitly confirmed on the page.",
-        "target_industry": "Retail",
-        "target_customer": "Store owners expanding online",
-        "main_benefit": "Could help the business address demand for higher conversion rates.",
-        "source": "inferred",
-        "evidence": ""
+        "service_name": "Shopify Markets (global selling)",
+        "description": "Tools for international selling, localized shipping, duties and currency conversion.",
+        "target_industry": "Brands expanding internationally",
+        "target_customer": "Merchants targeting cross‑border customers",
+        "main_benefit": "Take the complexity out of international selling with built‑in shipping tools.",
+        "source": "website",
+        "evidence": "Sell across borders… Take the complexity out of international selling with Shopify Markets."
       },
       {
-        "service_name": "Product Merchandising",
-        "description": "Product Merchandising is a category-based recommendation inferred from the site's focus on e-commerce & retail; it is not explicitly confirmed on the page.",
-        "target_industry": "Retail",
-        "target_customer": "Store owners expanding online",
-        "main_benefit": "Could help the business address demand for higher conversion rates.",
-        "source": "inferred",
-        "evidence": ""
+        "service_name": "Sidekick AI Assistant",
+        "description": "AI‑powered commerce assistant that surfaces growth opportunities and automates tasks.",
+        "target_industry": "All ecommerce segments",
+        "target_customer": "Growth‑focused merchants and marketers",
+        "main_benefit": "Automate tedious tasks and spot growth opportunities directly in the admin.",
+        "source": "website",
+        "evidence": "Meet your secret weapon, Sidekick… Spot opportunities for growth and automate tedious tasks with Sidekick."
       }
     ],
     "target_audience": {
       "primary_audience": [
         {
-          "segment": "Growing retail businesses",
-          "description": "Small and mid-sized organisations that need ecommerce solutions.",
-          "business_type": "Small and medium businesses",
+          "segment": "Entrepreneurial SMBs",
+          "description": "Founders and small teams launching their first online store.",
+          "business_type": "Small‑business ecommerce",
           "needs": [
-            "Higher conversion rates",
-            "Efficient order operations"
+            "Quick store launch",
+            "Affordable pricing",
+            "Simple payment integration"
           ],
-          "marketing_angle": "Lead with practical outcomes, proof, and a low-friction consultation."
-        },
-        {
-          "segment": "Specialist teams and department leads",
-          "description": "Teams evaluating a specialist partner for ecommerce solutions.",
-          "business_type": "Independent retailers",
-          "needs": [
-            "Efficient order operations",
-            "Stronger customer loyalty"
-          ],
-          "marketing_angle": "Use detailed service pages, FAQs, and evidence of delivery capability."
+          "marketing_angle": "Build and grow fast with AI‑driven tools and no‑code storefronts."
         }
       ],
       "secondary_audience": [
         {
-          "segment": "Startups and new ventures",
-          "description": "Early-stage teams that need a credible partner without building everything in-house.",
-          "business_type": "Startups",
+          "segment": "Enterprise & high‑volume retailers",
+          "description": "Large brands needing scalable, multi‑channel commerce infrastructure.",
+          "business_type": "Enterprise ecommerce",
           "needs": [
-            "Fast mobilisation",
-            "Clear scope and pricing"
+            "Robust API & headless options",
+            "Global fulfillment",
+            "Advanced analytics"
           ],
-          "marketing_angle": "Offer a defined starter engagement and transparent next steps."
-        },
-        {
-          "segment": "Established and multi-location organisations",
-          "description": "Larger organisations comparing providers for consistency and specialist capacity.",
-          "business_type": "Enterprise and multi-site organisations",
-          "needs": [
-            "Reliable delivery",
-            "Documented processes"
-          ],
-          "marketing_angle": "Emphasise governance, integration, and account support."
+          "marketing_angle": "Unified platform that powers worldwide sales and complex operations."
         }
       ],
       "industries": [
-        "Retail",
-        "Consumer goods",
-        "Fashion",
-        "Food and beverage",
-        "Wholesale"
+        "Fashion & Apparel",
+        "Home Goods",
+        "Food & Beverage",
+        "Beauty & Cosmetics",
+        "Electronics"
       ],
       "business_types": [
-        "Direct-to-consumer brands",
-        "Independent retailers",
-        "Wholesale distributors"
+        "Direct‑to‑consumer brands",
+        "Marketplace sellers",
+        "Brick‑and‑mortar retailers expanding online"
       ],
       "customer_profiles": [
-        "Store owners expanding online",
-        "Brand managers improving repeat purchase",
-        "Operations leads scaling fulfilment"
+        "Solo‑founder launching a hobby shop",
+        "Growth‑stage brand scaling internationally",
+        "Retail chain integrating online & offline channels"
       ],
       "location_focus": "",
       "customer_needs": [
-        "Higher conversion rates",
-        "Efficient order operations",
-        "Stronger customer loyalty"
+        "Fast time‑to‑market",
+        "Seamless multi‑channel selling",
+        "Scalable checkout and payments",
+        "AI‑driven growth insights"
       ],
       "customer_interests": [
-        "Conversion optimisation",
-        "Product photography",
-        "Fulfilment automation",
-        "Loyalty programmes"
+        "Low‑code website builders",
+        "Automation",
+        "International expansion",
+        "Conversion optimization"
       ],
       "recommended_segments": [
-        "Independent retailers moving online",
-        "DTC brands preparing seasonal campaigns",
-        "Wholesalers adding a digital catalogue"
+        "AI‑enabled growth marketers",
+        "International expansion teams"
       ]
     },
     "data_quality_notes": [
-      "Demo mode uses deterministic heuristics rather than an LLM.",
-      "Services marked 'inferred' are category-based suggestions, not confirmed page content.",
-      "Competitor analysis is intentionally empty to avoid fabricating market data.",
-      "No competitor set was returned. Treat competitor positioning as unverified."
+      "All competitor information is based on public sources; no proprietary data used.",
+      "Service evidence is taken directly from Shopify page headings and link labels; inferred details are labeled accordingly."
     ]
   },
   "meta": {
-    "request_id": "demo-request-0001",
-    "analyzed_at": "2026-11-18T14:54:01.196369Z",
-    "duration_ms": 392,
+    "request_id": "3244ff232825480b87f097640ae45f7a",
+    "analyzed_at": "2026-11-19T13:55:18.894417Z",
+    "duration_ms": 23708,
     "cached": false,
     "llm": {
-      "provider": "demo",
-      "model": "deterministic-heuristic-v1",
-      "mode": "demo",
-      "fallback_used": false,
+      "provider": "openai",
+      "model": "openai/gpt-oss-120b",
+      "mode": "llm",
+      "fallback_used": true,
       "usage": {
-        "input_tokens": 0,
-        "output_tokens": 0,
-        "total_tokens": 0,
-        "estimated_cost_usd": 0.0
+        "input_tokens": 4163,
+        "output_tokens": 2601,
+        "total_tokens": 6764,
+        "estimated_cost_usd": null
       }
     },
     "extraction": {
@@ -285,12 +313,11 @@
       "content_chars": 3182,
       "word_count": 510,
       "truncated": false,
-      "fetched_at": "2026-11-18T14:54:01.192453Z",
+      "fetched_at": "2026-11-19T13:54:55.622023Z",
       "content_hash": "adf68ab2a0874497e409a3463125f5dcfcb01a1e32e23410a5b11f96301a00a9"
     },
     "warnings": [
-      "Demo mode is active. Set GEMINI_API_KEY or OPENAI_API_KEY for grounded LLM analysis and competitor suggestions.",
-      "No competitor set was returned. Treat competitor positioning as unverified."
+      "Primary LLM provider failed; analysis was completed with the fallback provider."
     ]
   }
 }

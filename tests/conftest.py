@@ -20,6 +20,7 @@ def settings() -> Settings:
         cache_max_entries=16,
         max_content_chars=8000,
         max_page_bytes=500_000,
+        rate_limit_enabled=False,
     )
 
 

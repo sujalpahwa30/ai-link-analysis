@@ -132,3 +132,31 @@ def test_missing_url_returns_structured_validation_error(
     assert body["success"] is False
     assert body["error"]["code"] == "VALIDATION_ERROR"
     assert body["error"]["details"]["errors"]
+
+
+def test_analysis_endpoint_is_rate_limited_per_client(
+    settings: Settings,
+    sample_extraction: ExtractedWebsite,
+) -> None:
+    limited = settings.model_copy(
+        update={"rate_limit_enabled": True, "rate_limit_requests": 2}
+    )
+    client, _ = build_client(limited, sample_extraction)
+
+    with client:
+        first = client.post("/link-analysis", json={"url": "https://acme.example"})
+        second = client.post("/link-analysis", json={"url": "https://acme.example"})
+        third = client.post("/link-analysis", json={"url": "https://acme.example"})
+        health = client.get("/health")
+
+    assert first.status_code == 200
+    assert second.status_code == 200
+    assert third.status_code == 429
+    body = third.json()
+    assert body["success"] is False
+    assert body["error"]["code"] == "RATE_LIMITED"
+    assert body["error"]["request_id"]
+    assert int(third.headers["Retry-After"]) >= 1
+    assert third.headers["X-Request-ID"]
+    # Operational endpoints stay reachable for health checks and docs.
+    assert health.status_code == 200

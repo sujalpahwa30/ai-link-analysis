@@ -27,6 +27,7 @@ from app.schemas import (
 )
 from app.services.analysis_service import AnalysisArtifact, AnalysisService
 from app.services.llm_service import build_llm_service
+from app.services.rate_limiter import SlidingWindowRateLimiter
 from app.services.website_extractor import WebsiteExtractor
 
 logger = logging.getLogger(__name__)
@@ -105,17 +106,54 @@ def create_app(
             allow_headers=["Content-Type", "X-Request-ID"],
         )
 
+    limiter = (
+        SlidingWindowRateLimiter(
+            limit=app_settings.rate_limit_requests,
+            window_seconds=app_settings.rate_limit_window_seconds,
+        )
+        if app_settings.rate_limit_enabled
+        else None
+    )
+
     @app.middleware("http")
     async def request_context(request: Request, call_next):  # type: ignore[no-untyped-def]
         supplied = request.headers.get("X-Request-ID", "")
         request_id = supplied if _REQUEST_ID_PATTERN.fullmatch(supplied) else uuid.uuid4().hex
         request.state.request_id = request_id
-        response = await call_next(request)
-        response.headers["X-Request-ID"] = request_id
-        response.headers["X-Content-Type-Options"] = "nosniff"
-        response.headers["X-Frame-Options"] = "DENY"
-        response.headers["Referrer-Policy"] = "no-referrer"
-        return response
+
+        def finish(response):  # type: ignore[no-untyped-def]
+            response.headers["X-Request-ID"] = request_id
+            response.headers["X-Content-Type-Options"] = "nosniff"
+            response.headers["X-Frame-Options"] = "DENY"
+            response.headers["Referrer-Policy"] = "no-referrer"
+            return response
+
+        if limiter is not None and request.method == "POST" and request.url.path == "/link-analysis":
+            client_host = request.client.host if request.client else "unknown"
+            allowed, retry_after = limiter.check(client_host)
+            if not allowed:
+                logger.info(
+                    "Rate limit exceeded request_id=%s client=%s retry_after=%s",
+                    request_id,
+                    client_host,
+                    retry_after,
+                )
+                body = ErrorResponse(
+                    error=ErrorDetail(
+                        code="RATE_LIMITED",
+                        message="Too many analysis requests. Please retry shortly.",
+                        request_id=request_id,
+                    )
+                )
+                return finish(
+                    JSONResponse(
+                        status_code=429,
+                        content=body.model_dump(mode="json"),
+                        headers={"Retry-After": str(retry_after)},
+                    )
+                )
+
+        return finish(await call_next(request))
 
     @app.exception_handler(AppError)
     async def handle_app_error(request: Request, exc: AppError) -> JSONResponse:

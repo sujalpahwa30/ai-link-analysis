@@ -66,6 +66,12 @@ class Settings(BaseSettings):
 
     cors_origins: str = ""
 
+    # Per-client ceiling for the analysis endpoint; protects the provider key
+    # when the service is publicly reachable.
+    rate_limit_enabled: bool = True
+    rate_limit_requests: int = Field(default=10, ge=1, le=10_000)
+    rate_limit_window_seconds: int = Field(default=60, ge=1, le=3600)
+
     @field_validator("log_level")
     @classmethod
     def validate_log_level(cls, value: str) -> str:

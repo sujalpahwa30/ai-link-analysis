@@ -21,7 +21,7 @@ A production-shaped FastAPI service that fetches a public website, extracts read
 - Extracts title, metadata, headings, JSON-LD, internal link labels, and cleaned page text.
 - Makes **one structured LLM call** for all five analysis sections to reduce latency and cost.
 - Validates the LLM document with strict Pydantic models and one bounded repair attempt.
-- Post-processes competitor rows to remove duplicates, the brand itself, and malformed URLs.
+- Post-processes competitor rows to remove duplicates, the brand itself, malformed URLs, and placeholder domains such as example.org.
 - Returns a stable JSON contract with request timing, token usage, and estimated cost.
 - Caches identical analyses in-process with TTL + LRU eviction.
 - Enforces a per-client rate limit on the analysis endpoint (`429` + `Retry-After`).
@@ -491,7 +491,7 @@ The same two commands run in GitHub Actions on every push (`.github/workflows/ci
 Current result:
 
 ```text
-50 passed
+52 passed
 All checks passed!
 ```
 
@@ -601,7 +601,7 @@ Deployed from this repository on Render (Docker, free plan, `$PORT` injected). V
 | Item | Status |
 |---|---|
 | Deployment | Live at <https://ai-link-analysis-c2yi.onrender.com> (Render free plan, Docker) |
-| Tests | 50 passing (`pytest`) |
+| Tests | 52 passing (`pytest`) |
 | Lint | `ruff check app tests` clean |
 | Secrets | `.env` is ignored and has never been committed |
 | Known gaps | No authentication, no browser rendering, no distributed cache |

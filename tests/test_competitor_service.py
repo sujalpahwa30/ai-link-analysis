@@ -54,3 +54,25 @@ def test_empty_competitor_set_is_not_fabricated() -> None:
     competitors, warnings = sanitise_competitors("Acme Cloud", [])
     assert competitors == []
     assert any("unverified" in warning for warning in warnings)
+
+
+def test_placeholder_competitors_are_removed() -> None:
+    competitors, warnings = sanitise_competitors(
+        "Example",
+        [
+            _competitor("example.org"),
+            _competitor("example.net"),
+            _competitor("dummyurl.com"),
+            _competitor("Northstar"),
+        ],
+    )
+    assert [competitor.name for competitor in competitors] == ["Northstar"]
+    assert any("placeholder" in warning for warning in warnings)
+
+
+def test_reserved_documented_domains_are_removed_by_name() -> None:
+    competitors, _ = sanitise_competitors(
+        "Acme Cloud",
+        [_competitor("ample.test"), _competitor("Northstar")],
+    )
+    assert [competitor.name for competitor in competitors] == ["Northstar"]

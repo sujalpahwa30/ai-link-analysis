@@ -9,13 +9,24 @@ services:
         value: production
       - key: LLM_PROVIDER
         value: auto
+      - key: ENABLE_LLM_FALLBACK
+        value: "true"
       - key: GEMINI_API_KEY
         sync: false
       - key: GEMINI_MODEL
         value: gemini-3.5-flash-lite
+      # OpenAI-compatible fallback slot, pointed at Groq's free tier.
       - key: OPENAI_API_KEY
         sync: false
+      - key: OPENAI_BASE_URL
+        value: https://api.groq.com/openai/v1
       - key: OPENAI_MODEL
-        value: gpt-6-luna
+        value: openai/gpt-oss-120b
+      - key: OPENAI_REASONING_EFFORT
+        value: low
+      - key: MAX_CONTENT_CHARS
+        value: "8000"
+      - key: LLM_MAX_OUTPUT_TOKENS
+        value: "3000"
       - key: CACHE_MAX_ENTRIES
         value: "256"

@@ -19,6 +19,7 @@ USER app
 EXPOSE 4000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:4000/health', timeout=3)"
+  CMD python -c "import os, urllib.request; urllib.request.urlopen(f\"http://127.0.0.1:{os.environ.get('PORT', '4000')}/health\", timeout=3)"
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "4000", "--proxy-headers", "--forwarded-allow-ips", "*"]
+# Honour $PORT so the image runs on Render, Cloud Run, Fly.io and plain Docker alike.
+CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-4000} --proxy-headers --forwarded-allow-ips='*'"]

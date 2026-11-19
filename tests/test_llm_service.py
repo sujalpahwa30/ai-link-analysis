@@ -5,6 +5,7 @@ from typing import Any
 
 import httpx
 import pytest
+from pydantic import BaseModel
 
 from app.exceptions import LLMOutputError
 from app.schemas import LLMOutput
@@ -42,6 +43,37 @@ def test_strict_schema_is_inlined_and_openai_compatible() -> None:
     assert schema["additionalProperties"] is False
     _assert_strict_objects(schema)
     assert "target_search_queries" in json.dumps(schema)
+
+
+def test_strict_schema_keeps_fields_named_like_schema_keywords() -> None:
+    """Field names such as ``title`` must not be stripped as schema metadata."""
+
+    class Inner(BaseModel):
+        title: str
+        format: str
+
+    class Outer(BaseModel):
+        title: str
+        default: str
+        nested: list[Inner]
+
+    schema = make_strict_json_schema(Outer)
+    assert list(schema["properties"]) == ["title", "default", "nested"]
+    assert set(schema["required"]) == {"title", "default", "nested"}
+    items = schema["properties"]["nested"]["items"]
+    assert list(items["properties"]) == ["title", "format"]
+    assert set(items["required"]) == {"title", "format"}
+    _assert_strict_objects(schema)
+
+
+def test_strict_schema_exposes_supporting_content_title() -> None:
+    schema = make_strict_json_schema(LLMOutput)
+    item = (
+        schema["properties"]["analysis"]["properties"]["seo_improvements"]
+        ["properties"]["supporting_content"]["items"]
+    )
+    assert "title" in item["properties"]
+    assert "title" in item["required"]
 
 
 def test_parse_json_object_handles_fences_and_prose() -> None:

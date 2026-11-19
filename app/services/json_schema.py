@@ -44,7 +44,17 @@ def make_strict_json_schema(model: type[BaseModel]) -> dict[str, Any]:
 
         cleaned: dict[str, Any] = {}
         for key, value in node.items():
-            if key in _UNSUPPORTED_KEYWORDS or key == "$defs":
+            if key == "$defs":
+                continue
+            if key == "properties" and isinstance(value, dict):
+                # Keys under "properties" are model field names, not schema
+                # keywords. A field may legitimately be called "title",
+                # "format" or "default" and must never be stripped.
+                cleaned["properties"] = {
+                    name: resolve(subschema) for name, subschema in value.items()
+                }
+                continue
+            if key in _UNSUPPORTED_KEYWORDS:
                 continue
             cleaned[key] = resolve(value)
 

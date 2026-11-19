@@ -1,7 +1,5 @@
 # AI Link Analysis API
 
-[![CI](https://github.com/sujalpahwa30/ai-link-analysis/actions/workflows/ci.yml/badge.svg)](https://github.com/sujalpahwa30/ai-link-analysis/actions/workflows/ci.yml)
-
 A production-shaped FastAPI service that fetches a public website, extracts readable business content, and uses an LLM to produce structured competitor, search-query, SEO, service, and target-audience intelligence.
 
 **Endpoint:** `POST /link-analysis`  

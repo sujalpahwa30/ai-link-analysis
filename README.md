@@ -350,14 +350,14 @@ A real captured response is in [`docs/sample-response.json`](docs/sample-respons
 
 - Secrets via environment variables and `SecretStr`.
 - No API keys, prompts, or page text in logs.
-- Per-client rate limiting on `POST /link-analysis` (`RATE_LIMIT_REQUESTS` per `RATE_LIMIT_WINDOW_SECONDS`, default 10 per minute) returns `429` with `Retry-After`. `/health` and `/docs` stay reachable so health checks and reviewers are never locked out.
+- Per-client rate limiting on `POST /link-analysis` (`RATE_LIMIT_REQUESTS` per `RATE_LIMIT_WINDOW_SECONDS`, default 10 per minute) returns `429` with `Retry-After`. `/health` and `/docs` stay reachable so monitoring and documentation are never blocked.
 - Generic 500 responses to clients; stack traces only in server logs.
 - Security headers on every response.
 - Request IDs for traceability.
 - Strict response models prevent accidental extra fields.
 - CORS disabled by default.
 
-### Not included (intentional for a timed exercise)
+### Not included (deliberate scope choices)
 
 - API authentication and per-tenant quotas (a per-client rate limit is included).
 - Distributed rate limiting (counters are in-process).
@@ -428,7 +428,7 @@ The API reports actual provider token counts and an estimated cost in `meta.llm.
 
 **Why not simply choose the cheapest model?** This is a synchronous API. A 3,000-token JSON response is roughly 9 seconds at 350 tok/s versus 22 seconds at 135 tok/s. Gemini keeps the endpoint responsive while remaining below $0.01 per analysis. For asynchronous/bulk workloads, GPT-6 Luna is the better economic choice.
 
-**Why not Claude Haiku 5.5?** It is a credible low-cost option with a 1M context and structured outputs. It is not wired into this submission to keep the provider surface small and testable. The abstraction makes it a straightforward third provider; its newer tokenizer and adaptive thinking must be included in any cost/accuracy comparison.
+**Why not Claude Haiku 5.5?** It is a credible low-cost option with a 1M context and structured outputs. It is not wired into this project to keep the provider surface small and testable. The abstraction makes it a straightforward third provider; its newer tokenizer and adaptive thinking must be included in any cost/accuracy comparison.
 
 ### D. Cost optimization implemented
 
@@ -534,13 +534,13 @@ Operational notes:
 - The free plan sleeps after roughly 15 minutes of inactivity and the first request can take ~50 s. Ping `/health` from a free uptime monitor before sharing the link.
 - Keep `RATE_LIMIT_REQUESTS` conservative when the deployment uses free-tier keys.
 
-### Live demo fields for submission
+### Live demo
 
-| Requirement | Value |
+| Item | Value |
 |---|---|
-| Live Demo | `https://YOUR-DEPLOYMENT.example` |
-| API Endpoint | `https://YOUR-DEPLOYMENT.example/link-analysis` |
-| API Documentation | `https://YOUR-DEPLOYMENT.example/docs` |
+| Service | `https://YOUR-DEPLOYMENT.example` |
+| Endpoint | `https://YOUR-DEPLOYMENT.example/link-analysis` |
+| Documentation | `https://YOUR-DEPLOYMENT.example/docs` |
 
 Deployment requires a hosting account and provider credentials. The container and blueprint are ready; replace the placeholders above after deploying.
 
@@ -582,25 +582,24 @@ Deployment requires a hosting account and provider credentials. The container an
 2. Add a verified competitor research pipeline using a search/company-data API and explicit citations.
 3. Add a human-reviewed evaluation set and track precision/recall for competitor and service extraction.
 4. Add Redis and content-hash caching to avoid duplicate LLM calls across replicas.
-5. Add authentication, rate limiting, and per-tenant cost budgets.
+5. Add authentication and per-tenant cost budgets on top of the existing rate limit.
 6. Add structured observability (OpenTelemetry) and provider latency dashboards.
 7. Add async job mode for long analyses with webhook/polling delivery.
 8. Add multi-page crawling limited to same-origin service and about pages.
 
 ---
 
-## 13. Submission Checklist
+## 13. Project Status
 
-- [ ] Push this repository to a **public** GitHub repository.
-- [ ] Add a live deployment URL, `/link-analysis`, and `/docs` links above.
-- [x] Confirm no `.env`, API key, or credential is committed.
-- [x] Run `pytest` and `ruff check app tests` before submission (42 tests).
-- [ ] Rotate any provider key that was shared outside the repository before going live.
-- [ ] Follow Dxora Technologies on LinkedIn: <https://www.linkedin.com/company/dxora-technologies>
-- [ ] Follow CREST on Instagram: <https://www.instagram.com/crestspot/>
-- [ ] Include your LinkedIn and Instagram profile links in the application.
-- [ ] Email **hr@chivoxai.com** with subject `Your Name - Python Practical Link Analysis test review`.
-- [ ] Include full name, demo link, public GitHub link, contact number, current location, and preferred final-discussion date/time.
+| Item | Status |
+|---|---|
+| Tests | 42 passing (`pytest`) |
+| Lint | `ruff check app tests` clean |
+| Secrets | `.env` is ignored and has never been committed |
+| Deployment | Dockerfile and Render blueprint are ready; no public instance is running |
+| Known gaps | No authentication, no browser rendering, no distributed cache |
+
+Before publishing a deployment, rotate any provider key that has been shared outside the repository.
 
 ---
 

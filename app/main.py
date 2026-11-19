@@ -27,7 +27,7 @@ from app.schemas import (
 )
 from app.services.analysis_service import AnalysisArtifact, AnalysisService
 from app.services.llm_service import build_llm_service
-from app.services.rate_limiter import SlidingWindowRateLimiter
+from app.services.rate_limiter import SlidingWindowRateLimiter, resolve_client_key
 from app.services.website_extractor import WebsiteExtractor
 
 logger = logging.getLogger(__name__)
@@ -129,7 +129,10 @@ def create_app(
             return response
 
         if limiter is not None and request.method == "POST" and request.url.path == "/link-analysis":
-            client_host = request.client.host if request.client else "unknown"
+            client_host = resolve_client_key(
+                request.headers,
+                request.client.host if request.client else None,
+            )
             allowed, retry_after = limiter.check(client_host)
             if not allowed:
                 logger.info(

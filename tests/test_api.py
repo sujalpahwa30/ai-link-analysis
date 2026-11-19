@@ -160,3 +160,36 @@ def test_analysis_endpoint_is_rate_limited_per_client(
     assert third.headers["X-Request-ID"]
     # Operational endpoints stay reachable for health checks and docs.
     assert health.status_code == 200
+
+
+def test_spoofed_forwarded_for_does_not_bypass_rate_limit(
+    settings: Settings,
+    sample_extraction: ExtractedWebsite,
+) -> None:
+    limited = settings.model_copy(
+        update={"rate_limit_enabled": True, "rate_limit_requests": 2}
+    )
+    client, _ = build_client(limited, sample_extraction)
+
+    with client:
+        first = client.post(
+            "/link-analysis",
+            json={"url": "https://acme.example"},
+            headers={"X-Forwarded-For": "203.0.113.1"},
+        )
+        second = client.post(
+            "/link-analysis",
+            json={"url": "https://acme.example"},
+            headers={"X-Forwarded-For": "203.0.113.2"},
+        )
+        third = client.post(
+            "/link-analysis",
+            json={"url": "https://acme.example"},
+            headers={"X-Forwarded-For": "203.0.113.3"},
+        )
+
+    assert first.status_code == 200
+    assert second.status_code == 200
+    # A caller-chosen forwarding header must not open a fresh bucket.
+    assert third.status_code == 429
+    assert third.json()["error"]["code"] == "RATE_LIMITED"

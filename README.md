@@ -1,10 +1,16 @@
 # AI Link Analysis API
 
+[![CI](https://github.com/sujalpahwa30/ai-link-analysis/actions/workflows/ci.yml/badge.svg)](https://github.com/sujalpahwa30/ai-link-analysis/actions/workflows/ci.yml)
+
 A production-shaped FastAPI service that fetches a public website, extracts readable business content, and uses an LLM to produce structured competitor, search-query, SEO, service, and target-audience intelligence.
 
 **Endpoint:** `POST /link-analysis`  
 **Port:** `4000`  
-**Docs:** `http://localhost:4000/docs`
+**Live service:** <https://ai-link-analysis-c2yi.onrender.com>  
+**Live API docs:** <https://ai-link-analysis-c2yi.onrender.com/docs>  
+**Local docs:** `http://localhost:4000/docs`
+
+> The Render instance runs on a free plan, so the first request after ~15 minutes of idleness takes roughly 50 s to wake the container. Warm analysis requests take 17–25 s.
 
 > **Demo mode:** with no provider key, the API runs a deterministic, clearly-labelled heuristic analyzer so the service remains testable. Demo mode intentionally leaves competitors empty instead of inventing them. Set `GEMINI_API_KEY` or `OPENAI_API_KEY` for real LLM analysis.
 
@@ -157,7 +163,7 @@ LLM_PROVIDER=auto
 # LLM_PROVIDER=demo
 ```
 
-With both keys present, Gemini is primary and GPT-6 Luna is the fallback. Disable fallback with `ENABLE_LLM_FALLBACK=false`.
+With both keys present, Gemini is primary and the OpenAI-compatible slot is the fallback. The shipped `render.yaml` points that slot at Groq's free tier (`openai/gpt-oss-120b`), so the deployed fallback costs nothing. Disable fallback with `ENABLE_LLM_FALLBACK=false`.
 
 ---
 
@@ -351,6 +357,7 @@ A real captured response is in [`docs/sample-response.json`](docs/sample-respons
 - Secrets via environment variables and `SecretStr`.
 - No API keys, prompts, or page text in logs.
 - Per-client rate limiting on `POST /link-analysis` (`RATE_LIMIT_REQUESTS` per `RATE_LIMIT_WINDOW_SECONDS`, default 10 per minute) returns `429` with `Retry-After`. `/health` and `/docs` stay reachable so monitoring and documentation are never blocked.
+- Clients are identified by the Cloudflare-set `CF-Connecting-IP` header rather than `X-Forwarded-For`; forwarding headers are caller-controlled and would otherwise let a caller rotate its key and escape the limit.
 - Generic 500 responses to clients; stack traces only in server logs.
 - Security headers on every response.
 - Request IDs for traceability.
@@ -481,10 +488,12 @@ pytest
 ruff check app tests
 ```
 
+The same two commands run in GitHub Actions on every push (`.github/workflows/ci.yml`).
+
 Current result:
 
 ```text
-42 passed
+50 passed
 All checks passed!
 ```
 
@@ -498,7 +507,7 @@ Coverage includes:
 - LLM JSON repair and provider fallback.
 - Competitor deduplication and malformed URL handling.
 - End-to-end API contract, caching, request IDs, health, and structured errors.
-- Rate limiting: `429` shape, `Retry-After`, and exemption of `/health`.
+- Rate limiting: `429` shape, `Retry-After`, exemption of `/health`, and rejection of caller-chosen forwarding headers as a bucket key.
 
 The test suite uses `httpx.MockTransport` and fake providers. It does not make paid LLM calls or depend on a live website.
 
@@ -538,11 +547,11 @@ Operational notes:
 
 | Item | Value |
 |---|---|
-| Service | `https://YOUR-DEPLOYMENT.example` |
-| Endpoint | `https://YOUR-DEPLOYMENT.example/link-analysis` |
-| Documentation | `https://YOUR-DEPLOYMENT.example/docs` |
+| Service | <https://ai-link-analysis-c2yi.onrender.com> |
+| Endpoint | `POST https://ai-link-analysis-c2yi.onrender.com/link-analysis` |
+| Documentation | <https://ai-link-analysis-c2yi.onrender.com/docs> |
 
-Deployment requires a hosting account and provider credentials. The container and blueprint are ready; replace the placeholders above after deploying.
+Deployed from this repository on Render (Docker, free plan, `$PORT` injected). Verified against the public URL: `/health` reports `status: "ok"` and `demo_mode: false`, and a `POST /link-analysis` for `https://example.com` returned all five sections with honest low-content warnings. The first request after the free-tier idle timeout can take ~50 s.
 
 ### Production checklist
 
@@ -563,7 +572,7 @@ Deployment requires a hosting account and provider credentials. The container an
 - **JavaScript-heavy sites** may return little text. A browser renderer is not included.
 - **Bot-protected sites** (Cloudflare, captchas, 401/403/429) are reported gracefully, not bypassed.
 - **Single-page analysis only.** It does not crawl the full site.
-- **Competitor data** is model knowledge unless marked `public_information`; it is not verified against a live search API.
+- **Competitor data is never verified.** `basis` is declared by the model: `public_information` means the model judges the company well known, and `ai_suggested` means it is a reasoned category peer. Neither is checked against a search or company-data API.
 - **No search-volume, backlink, traffic, or ranking data.** The app never invents these metrics.
 - **In-process cache** resets on restart and is per worker.
 - **DNS rebinding** is mitigated but not fully eliminated without network-level egress controls.
@@ -571,7 +580,7 @@ Deployment requires a hosting account and provider credentials. The container an
 - **LLM output can still be wrong.** The contract guarantees shape and provenance labels, not factual truth.
 - **No authentication.** A per-client rate limit is included, but anyone holding the URL can spend your provider quota; add API keys before a real launch.
 - **Free-tier capacity is not production capacity.** Gemini returns `503` on large requests during demand spikes and Groq enforces an 8,000 TPM ceiling. The fallback covers the former; the latter means one full analysis per minute.
-- **Rate limits are per process.** Multiple replicas each keep their own counters; move them to Redis for a shared limit.
+- **Rate limits are per process.** Multiple replicas each keep their own counters; move them to Redis for a shared limit. The key comes from the edge-provided client address, so a caller that could reach the container directly could forge it.
 - **Model names and prices change.** The price table is dated and returns `null` for unknown models rather than guessing.
 
 ---
@@ -593,13 +602,13 @@ Deployment requires a hosting account and provider credentials. The container an
 
 | Item | Status |
 |---|---|
-| Tests | 42 passing (`pytest`) |
+| Deployment | Live at <https://ai-link-analysis-c2yi.onrender.com> (Render free plan, Docker) |
+| Tests | 50 passing (`pytest`) |
 | Lint | `ruff check app tests` clean |
 | Secrets | `.env` is ignored and has never been committed |
-| Deployment | Dockerfile and Render blueprint are ready; no public instance is running |
 | Known gaps | No authentication, no browser rendering, no distributed cache |
 
-Before publishing a deployment, rotate any provider key that has been shared outside the repository.
+Provider keys shared outside the repository should be rotated before the service is treated as a permanent deployment.
 
 ---
 

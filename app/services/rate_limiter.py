@@ -10,6 +10,26 @@ from __future__ import annotations
 
 import time
 from collections import deque
+from collections.abc import Mapping
+
+
+def resolve_client_key(headers: Mapping[str, str], socket_host: str | None) -> str:
+    """Return a stable client key that a caller cannot choose for themselves.
+
+    Behind Cloudflare, ``CF-Connecting-IP`` is written by the edge and any
+    caller-supplied copy is overwritten, so it is the only address worth
+    trusting. ``X-Forwarded-For`` is deliberately not used: its left-most
+    entries come from the caller, and keying on them lets a client rotate the
+    header to escape the limit. The socket peer is the fallback for local runs
+    and for hosts that terminate TLS directly.
+    """
+
+    for name, value in headers.items():
+        if name.lower() == "cf-connecting-ip":
+            edge_address = value.strip()
+            if edge_address:
+                return edge_address
+    return socket_host or "unknown"
 
 
 class SlidingWindowRateLimiter:
@@ -65,4 +85,4 @@ class SlidingWindowRateLimiter:
             del self._buckets[key]
 
 
-__all__ = ["SlidingWindowRateLimiter"]
+__all__ = ["SlidingWindowRateLimiter", "resolve_client_key"]
